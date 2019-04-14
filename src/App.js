@@ -1,28 +1,55 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import Hole from './Hole'
+import Button from '@material-ui/core/Button'
 
 class App extends Component {
+  state = {
+    holes: [
+      [null, null, null, null],
+      [null, null, null, null],
+      [null, null, null, null],
+      [null, null, null, null]
+    ],
+    isGameStarted: false,
+    score: 0
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <h2>WHACK-A-MOLE</h2>
+        <div
+          className={'board'}
+        >
+          {
+            this.state.holes.map(
+              (row, index) => (
+                <div
+                  key={'row' + index}
+                  className={'board-row'}
+                >
+                  {
+                    row.map(
+                      (hole, index) => (
+                        <Hole
+                          key={index}
+                        />
+                      )
+                    )
+                  }
+                </div>
+              )
+            )
+          }
+        </div>
+        <Button
+		  variant={'contained'}
+        >
+          START
+        </Button>
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
