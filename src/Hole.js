@@ -3,7 +3,7 @@ import React from 'react'
 const Hole = (props) => {
     return (
         <div
-            className={'hole'}
+            className={props.className}
         >
 
         </div>
