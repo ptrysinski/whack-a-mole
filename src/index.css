@@ -43,6 +43,15 @@
   outline: none;
 }
 
+
 .modal-h2{
-  padding: 10px;
+  padding: 20px 0 10px;
+}
+
+.bold-result {
+  font-weight: bold;
+}
+
+.p-modal, .button {
+  font-size: 20px;
 }

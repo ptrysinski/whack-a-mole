@@ -4,6 +4,18 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 
 const ModalWindow = (props) => {
+    const modifiedAllResults = props.allResults.map(
+        ([key, value]) => (
+            {
+                key,
+                ...value
+            }
+        )
+    )
+
+    const sortedResults = modifiedAllResults.sort((x, y) => y.result - x.result)
+    const tenBestResults = sortedResults.filter((el, index) => index < 10)
+
     return (
         <Modal
             open={props.isModalOpen}
@@ -25,6 +37,24 @@ const ModalWindow = (props) => {
                     SAVE
         		</Button>
                 <h2 className={'modal-h2'}>Ranking:</h2>
+                {
+                    tenBestResults.map(
+                        (el, index) => (
+                            <p
+                                key={el.key}
+                                className={
+                                    el.name === props.name && el.result === props.result ?
+                                        'bold-result p-modal'
+                                        :
+                                        'p-modal'
+                                }
+                            >
+                                {(index + 1) + '. ' + el.name + ': ' + el.result}
+                            </p>
+                        )
+                    )
+                }
+
             </div>
         </Modal>
     )

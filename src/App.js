@@ -21,6 +21,8 @@ class App extends Component {
     isLevel2: false,
     isModalOpen: false,
     name: '',
+    isResultSaved: false,
+    allResults: []
   }
 
   componentDidMount = () => {
@@ -131,13 +133,12 @@ class App extends Component {
 	}
 
 	saveResult = () => {
+    if (this.state.isResultSaved) return
 		database.ref('/results/').push({
 			name: this.state.name,
 			result: this.state.result
 		})
-		.then(
-			this.setState({name: ''})
-		)
+		this.setState({ isResultSaved: true })
 	}
 
 	toggleModal = () => {
