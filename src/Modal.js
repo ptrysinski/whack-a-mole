@@ -23,6 +23,7 @@ const ModalWindow = (props) => {
             className={'modal'}
         >
             <div className={'modal-div'}>
+                <h2 className={'modal-h2'}>Congratulations, earth is safe!</h2>
                 <TextField
                     label={'Enter your name'}
                     margin={'dense'}

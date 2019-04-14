@@ -16,7 +16,7 @@ class App extends Component {
     isGameFinished: false,
     randomHole: null,
     score: 0,
-    currentCount: 20,
+    currentCount: 120,
     interval: null,
     isLevel2: false,
     isModalOpen: false,
@@ -51,7 +51,7 @@ class App extends Component {
 			score: 0,
 		})
     this.startLevel1()
-    this.state.currentCount = 20
+    this.state.currentCount = 120
     this.timeCounter()
 		this.endGame()
   }
@@ -98,7 +98,7 @@ class App extends Component {
 
 	countScores = () => {
 		this.setState({ score: this.state.score + 1 })
-		if (this.state.score >= 10) {
+		if (this.state.score + 1 >= 9) {
 			this.setState({ isLevel2: true })
 			clearInterval(this.state.interval)
 		}
@@ -124,7 +124,7 @@ class App extends Component {
 					isModalOpen: true
 				})
 			},
-			20000
+			120000
 		)
   }
   
@@ -160,12 +160,16 @@ class App extends Component {
     this.setState({intervalId: intervalId})
   }
 
+  refresh = () => {
+    window.location.reload()
+  }
+
   render() {
 		return (
-			<div>
-				<h2>WHACK A MOLE</h2>
-        <h2>your score: {this.state.score}</h2>
-        <h2>time left: {this.state.currentCount}</h2>
+			<div className={'container'}>
+				<h1 className={'h1'}>WHACK-AN-ALIEN-SPACESHIP</h1>
+				<h2 className={'h2'}>Alien spaceships whacked: {this.state.score}</h2>
+        <h2 className={'h2'}>Time left: {this.state.currentCount} seconds</h2>
 				<div
 					className={'board'}
 				>
@@ -197,12 +201,28 @@ class App extends Component {
 						)
 					}
 				</div>
-				<Button
-					variant={'contained'}
-					onClick={this.startGame}
-				>
-					START
-        </Button>
+				{
+					!this.state.isGameStarted ?
+						<Button
+							variant={'contained'}
+							onClick={this.startGame}
+						>
+							START
+        				</Button>
+						:
+						null
+        }
+        {
+          !this.state.isGameStarted ?
+            null
+            :
+						<Button
+							variant={'contained'}
+							onClick={this.refresh}
+						>
+							RESTART
+        		</Button>
+				}
         <ModalWindow
 					result={this.state.result}
 					name={this.state.name}
