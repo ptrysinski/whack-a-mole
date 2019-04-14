@@ -11,9 +11,11 @@ class App extends Component {
       [13, 14, 15, 16]
     ],
     isGameStarted: false,
+    isGameFinished: false,
     randomHole: null,
     score: 0,
     currentCount: 20,
+    interval: null,
     isLevel2: false
   }
 
@@ -42,29 +44,58 @@ class App extends Component {
   }
   
   startLevel1 = () => {
-		const showMole = setInterval(
+    this.randomHole()
+
+    const showMole = setInterval(
 			() => {
 				this.checkLevel()
 				this.randomHole()
 			},
-			1200
+			1500
 		)
 		this.setState({ interval: showMole })
 	}
 
 	checkLevel = () => {
-		if (this.state.score >= 10) {
+		if (this.state.isLevel2) {
 			clearInterval(this.state.interval)
 			this.startLevel2()
 		}
 	}
 
 	startLevel2 = () => {
+    this.randomHole()
+
 		const showMole = setInterval(
 			this.randomHole,
-			700
+			650
 		)
 		this.setState({ interval: showMole })
+  }
+  
+  nextMove = () => {
+		if (this.state.isLevel2) {
+			clearInterval(this.state.interval)
+			this.startLevel2()
+		} else {
+			clearInterval(this.state.interval)
+			this.startLevel1()
+		}
+	}
+
+	countScores = () => {
+		this.setState({ score: this.state.score + 1 })
+		if (this.state.score >= 10) {
+			this.setState({ isLevel2: true })
+			clearInterval(this.state.interval)
+		}
+	}
+
+	onUserClick = (userHole) => {
+		if (this.state.randomHole === userHole) {
+			this.countScores()
+      this.nextMove()
+		}
 	}
   
   endGame = () => {
@@ -73,7 +104,8 @@ class App extends Component {
 				clearInterval(this.state.interval)
 				this.setState({
 					isGameFinished: true,
-					isGameStarted: false,
+          isGameStarted: false,
+          isLevel2: false,
 					randomHole: null,
 				})
 			},
@@ -81,11 +113,7 @@ class App extends Component {
 		)
 	}
   
-  countScores = (userHole) => {
-		if (this.state.randomHole === userHole) {
-			this.setState({score: this.state.score + 1})
-		}
-  }
+  
 
   timer = () => {
     var newCount = this.state.currentCount - 1;
@@ -121,7 +149,7 @@ class App extends Component {
 										row.map(
 											(hole, holeIndex) => (
 												<Hole
-                          countScores={() => this.countScores(hole)}  
+                          onUserClick={() => this.onUserClick(hole)}
                           key={holeIndex}
 													className={
 														this.state.randomHole === array[rowIndex][holeIndex] ?
