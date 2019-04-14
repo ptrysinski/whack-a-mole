@@ -13,7 +13,8 @@ class App extends Component {
     isGameStarted: false,
     randomHole: null,
     score: 0,
-    currentCount: 20
+    currentCount: 20,
+    isLevel2: false
   }
 
   randomHole = () => {
@@ -29,29 +30,56 @@ class App extends Component {
   
   startGame = () => {
 		if (this.state.isGameStarted) return
-		this.setState({ isGameStarted: true })
-    this.showMole()
+		this.setState({
+			isGameStarted: true,
+			isGameFinished: false,
+			score: 0,
+		})
+    this.startLevel1()
     this.state.currentCount = 20
     this.timeCounter()
+		this.endGame()
   }
   
-  showMole = () => {
+  startLevel1 = () => {
+		const showMole = setInterval(
+			() => {
+				this.checkLevel()
+				this.randomHole()
+			},
+			1200
+		)
+		this.setState({ interval: showMole })
+	}
+
+	checkLevel = () => {
+		if (this.state.score >= 10) {
+			clearInterval(this.state.interval)
+			this.startLevel2()
+		}
+	}
+
+	startLevel2 = () => {
 		const showMole = setInterval(
 			this.randomHole,
-			1000
+			700
 		)
-		this.endGame(showMole)
-  }
+		this.setState({ interval: showMole })
+	}
   
-  endGame = (showMole) => {
+  endGame = () => {
 		setTimeout(
 			() => {
-				clearInterval(showMole)
-				this.setState({ isGameStarted: false, randomHole: null })
+				clearInterval(this.state.interval)
+				this.setState({
+					isGameFinished: true,
+					isGameStarted: false,
+					randomHole: null,
+				})
 			},
 			20000
 		)
-  }
+	}
   
   countScores = (userHole) => {
 		if (this.state.randomHole === userHole) {
