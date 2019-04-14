@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import Hole from './Hole'
+import ModalWindow from './Modal'
+import { database } from './firebaseConfig' 
 import Button from '@material-ui/core/Button'
 
 class App extends Component {
@@ -16,8 +18,17 @@ class App extends Component {
     score: 0,
     currentCount: 20,
     interval: null,
-    isLevel2: false
+    isLevel2: false,
+    isModalOpen: false,
+    name: '',
   }
+
+  componentDidMount = () => {
+		database.ref('/results/').on(
+			'value',
+			snapshot => this.setState({ allResults: Object.entries(snapshot.val()) })
+		)
+	}
 
   randomHole = () => {
 		const randomRowIndex = Math.floor(Math.random() * this.state.holes.length)
@@ -106,13 +117,32 @@ class App extends Component {
 					isGameFinished: true,
           isGameStarted: false,
           isLevel2: false,
-					randomHole: null,
+          randomHole: null,
+          result: this.state.score,
+					isModalOpen: true
 				})
 			},
 			20000
 		)
-	}
+  }
   
+  onChangeName = (event) => {
+		this.setState({name: event.target.value})
+	}
+
+	saveResult = () => {
+		database.ref('/results/').push({
+			name: this.state.name,
+			result: this.state.result
+		})
+		.then(
+			this.setState({name: ''})
+		)
+	}
+
+	toggleModal = () => {
+		this.setState({ isModalOpen: !this.state.isModalOpen })
+	}
   
 
   timer = () => {
@@ -172,6 +202,15 @@ class App extends Component {
 				>
 					START
         </Button>
+        <ModalWindow
+					result={this.state.result}
+					name={this.state.name}
+					onChangeName={this.onChangeName}
+					allResults={this.state.allResults}
+					saveResult={this.saveResult}
+					isModalOpen={this.state.isModalOpen}
+					toggleModal={this.toggleModal}
+				/>
 			</div>
 		)
   }

@@ -26,3 +26,23 @@
 .active {
   background: red;
 }
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+}
+
+.modal-div {
+  padding: 10px 15px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  outline: none;
+}
+
+.modal-h2{
+  padding: 10px;
+}
