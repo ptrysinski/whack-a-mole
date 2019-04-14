@@ -12,7 +12,8 @@ class App extends Component {
     ],
     isGameStarted: false,
     randomHole: null,
-    score: 0
+    score: 0,
+    currentCount: 20
   }
 
   randomHole = () => {
@@ -29,7 +30,9 @@ class App extends Component {
   startGame = () => {
 		if (this.state.isGameStarted) return
 		this.setState({ isGameStarted: true })
-		this.showMole()
+    this.showMole()
+    this.state.currentCount = 20
+    this.timeCounter()
   }
   
   showMole = () => {
@@ -46,15 +49,36 @@ class App extends Component {
 				clearInterval(showMole)
 				this.setState({ isGameStarted: false, randomHole: null })
 			},
-			120000
+			20000
 		)
-	}
+  }
+  
+  countScores = (userHole) => {
+		if (this.state.randomHole === userHole) {
+			this.setState({score: this.state.score + 1})
+		}
+  }
+
+  timer = () => {
+    var newCount = this.state.currentCount - 1;
+    if(newCount >= 0) { 
+        this.setState({ currentCount: newCount });
+    } else {
+        clearInterval(this.state.intervalId);
+    }
+ }
+  
+  timeCounter = () => {
+    var intervalId = setInterval(this.timer, 1000);
+    this.setState({intervalId: intervalId})
+  }
 
   render() {
-		console.log(this.state.isGameStarted)
 		return (
 			<div>
 				<h2>WHACK A MOLE</h2>
+        <h2>your score: {this.state.score}</h2>
+        <h2>time left: {this.state.currentCount}</h2>
 				<div
 					className={'board'}
 				>
@@ -69,7 +93,8 @@ class App extends Component {
 										row.map(
 											(hole, holeIndex) => (
 												<Hole
-													key={holeIndex}
+                          countScores={() => this.countScores(hole)}  
+                          key={holeIndex}
 													className={
 														this.state.randomHole === array[rowIndex][holeIndex] ?
 															'hole active'
